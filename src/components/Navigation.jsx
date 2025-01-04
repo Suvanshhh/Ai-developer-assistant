@@ -5,9 +5,20 @@ import { logoutUser } from "../utils/auth";
 import { useState, useEffect, useRef } from "react";
 
 function Navigation() {
-  const [user] = [];
+  const [user] = useAuthState(auth);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const NavLink = ({ to, children }) => (
     <Link
@@ -27,24 +38,11 @@ function Navigation() {
           {/* Logo and Brand */}
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <Link
-              to="/"
-              className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
-            >
+            <Link to="/" className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
               AI Chat
             </Link>
           </div>
@@ -63,28 +61,13 @@ function Navigation() {
                              hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-200"
                   >
                     <img
-                      src={
-                        user.photoURL ||
-                        `https://ui-avatars.com/api/?name=${user.email}&background=random`
-                      }
+                      src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=random`}
                       alt="Profile"
                       className="w-6 h-6 rounded-full"
                     />
                     <span className="text-sm font-medium">{user.email}</span>
-                    <svg
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        isMenuOpen ? "rotate-180" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
+                    <svg className={`w-4 h-4 transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
 
@@ -92,27 +75,15 @@ function Navigation() {
                   {isMenuOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg py-1 border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-lg">
                       <div className="px-4 py-2 border-b border-gray-200/50 dark:border-gray-700/50">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                          {user.email}
-                        </p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user.email}</p>
                       </div>
                       <button
                         onClick={logoutUser}
                         className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20
                                  transition-colors duration-200 font-medium flex items-center space-x-2"
                       >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                          />
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
                         <span>Logout</span>
                       </button>
@@ -141,32 +112,12 @@ function Navigation() {
                        p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-200"
             >
               {isMenuOpen ? (
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
@@ -184,34 +135,19 @@ function Navigation() {
                   <div className="px-4 py-2 border-t border-gray-200/50 dark:border-gray-700/50 mt-2">
                     <div className="flex items-center space-x-3 mb-3">
                       <img
-                        src={
-                          user.photoURL ||
-                          `https://ui-avatars.com/api/?name=${user.email}&background=random`
-                        }
+                        src={user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=random`}
                         alt="Profile"
                         className="w-8 h-8 rounded-full"
                       />
-                      <span className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                        {user.email}
-                      </span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{user.email}</span>
                     </div>
                     <button
                       onClick={logoutUser}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20
                                rounded-lg transition-colors duration-200 font-medium flex items-center space-x-2"
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                       </svg>
                       <span>Logout</span>
                     </button>
