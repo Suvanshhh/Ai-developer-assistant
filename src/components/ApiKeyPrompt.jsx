@@ -8,9 +8,29 @@ function ApiKeyPrompt() {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+    window.location.reload();
 
-  const handleKeyPress = (e) => {};
+    try {
+      // Store API key in localStorage
+      localStorage.setItem("gemini_api_key", apiKey);
+      setIsModalVisible(false);
+      navigate("/chat");
+    } catch (err) {
+      setError("Failed to save API key. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && apiKey.trim()) {
+      handleSubmit(e);
+    }
+  };
 
   return (
     <>
@@ -21,9 +41,7 @@ function ApiKeyPrompt() {
               <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white text-center relative">
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="relative">
-                  <h2 className="text-3xl font-bold mb-2">
-                    Enter Gemini API Key
-                  </h2>
+                  <h2 className="text-3xl font-bold mb-2">Enter Gemini API Key</h2>
                   <p className="text-blue-100">
                     You need a Gemini API key to use this application
                   </p>
@@ -71,7 +89,7 @@ function ApiKeyPrompt() {
                     <p>
                       Don't have an API key?{" "}
                       <a
-                        href="https://ai.google.dev/gemini-api/docs/api-key"
+                        href="https://makersuite.google.com/app/apikey"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 dark:text-blue-400 hover:underline"
