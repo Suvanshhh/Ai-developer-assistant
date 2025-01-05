@@ -97,6 +97,13 @@ Just let me know what you're working on, and I'll do my best to help!`,
   
     setIsLoading(true);
     try {
+      // First check if we have an API key
+      const apiKey = localStorage.getItem("gemini_api_key");
+      if (!apiKey) {
+        throw new Error("API key not found. Please set up your API key.");
+      }
+  
+      // Add user message to Firestore
       const userMessageDoc = await addDoc(collection(db, "messages"), {
         text: newMessage,
         timestamp: serverTimestamp(),
@@ -104,18 +111,22 @@ Just let me know what you're working on, and I'll do my best to help!`,
         userId: user.uid,
       });
   
+      // Initialize model with fresh API key
       const currentModel = initializeModel();
       if (!currentModel) {
-        throw new Error("API key not found. Please set up your API key.");
+        throw new Error("Failed to initialize AI model. Please check your API key.");
       }
   
+      // Generate response
       const result = await currentModel.generateContent(
         `You are a helpful programming assistant. Please provide well-formatted responses with code examples when appropriate. 
          User question: ${newMessage}`
       );
   
-      const response = result.response.text();
+      // Important: await the text() promise
+      const response = await result.response.text();
   
+      // Add AI response to Firestore
       await addDoc(collection(db, "messages"), {
         text: response,
         timestamp: serverTimestamp(),
@@ -123,23 +134,24 @@ Just let me know what you're working on, and I'll do my best to help!`,
         userId: user.uid,
         replyTo: userMessageDoc.id,
       });
+  
     } catch (error) {
-      console.error("Error:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          text: "Error: " + error.message,
-          role: "ai",
-          userId: user.uid,
-        },
-      ]);
+      console.error("Detailed error:", error);
+      
+      // Add error message to Firestore
+      await addDoc(collection(db, "messages"), {
+        text: `Error: ${error.message}. Please make sure your API key is set correctly.`,
+        timestamp: serverTimestamp(),
+        role: "ai",
+        userId: user.uid,
+        error: true,
+      });
+  
     } finally {
       setNewMessage("");
       setIsLoading(false);
     }
   };
-  
 
   const MessageContent = ({ text }) => {
     return (
@@ -245,7 +257,7 @@ Just let me know what you're working on, and I'll do my best to help!`,
             </div>
             <div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                VARTALAAP.ai
+                VARTALAAP.ai Chat Assistant
               </h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Your coding companion
@@ -322,7 +334,7 @@ Just let me know what you're working on, and I'll do my best to help!`,
                         </>
                       ) : (
                         <>
-                          <span>AI Assistant</span>
+                          <span>Vartalaap AI Assistant</span>
                           <svg
                             className="w-4 h-4"
                             fill="currentColor"
@@ -353,7 +365,7 @@ Just let me know what you're working on, and I'll do my best to help!`,
                 <div className="flex justify-start animate-fadeIn">
                   <div className="max-w-[85%] sm:max-w-[75%] bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl px-5 py-4 border border-gray-100 dark:border-gray-700/50 mr-4 shadow-lg">
                     <div className="text-sm mb-1 flex items-center space-x-2 text-gray-500 dark:text-gray-400">
-                      <span>AI Assistant</span>
+                      <span>Vartalaap AI Assistant</span>
                       <svg
                         className="w-4 h-4 animate-spin"
                         fill="none"
