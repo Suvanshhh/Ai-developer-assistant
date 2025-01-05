@@ -60,8 +60,18 @@ function Landing() {
             className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed"
           >
             Your intelligent programming companion that understands your code, solves problems, and helps you build better software.
+            
           </motion.p>
 
+          <motion.p 
+            variants={itemVariants}
+            className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed"
+          >
+            Developed With ❤️ by Suvansh.
+            
+          </motion.p>
+
+          
           <motion.div variants={itemVariants} className="flex justify-center gap-6 flex-wrap">
             <button
               onClick={() => navigate("/auth")}
