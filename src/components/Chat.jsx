@@ -245,7 +245,7 @@ Just let me know what you're working on, and I'll do my best to help!`,
             </div>
             <div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                AI Chat Assistant
+                VARTALAAP.ai
               </h1>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Your coding companion
