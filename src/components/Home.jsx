@@ -52,12 +52,21 @@ function Landing() {
             variants={itemVariants}
             className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text"
           >
-            AI-Powered Developer Assistant
+            VARTALAAP.ai
           </motion.h1>
+
+          <motion.h6
+            variants={itemVariants}
+            className="text-6xl font-semibold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text"
+          >
+            Your AI-Powered Developer Assistant
+          </motion.h6>
+
+         
 
           <motion.p 
             variants={itemVariants}
-            className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="text-xl text-gray-300 mb-9 max-w-2xl mx-auto leading-relaxed"
           >
             Your intelligent programming companion that understands your code, solves problems, and helps you build better software.
             
